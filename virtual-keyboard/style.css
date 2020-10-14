@@ -1,0 +1,158 @@
+body {
+  font-family: 'Chilanka', cursive;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+
+}
+
+h1 {
+  text-align: center;
+}
+
+.keyboard-output {
+  display: block;
+  box-sizing: border-box;
+  width: 70%;
+  min-height: 30%;
+  margin: 0 auto;
+  padding: 10px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  font-family: 'Chilanka', cursive;
+  font-size: 24px;
+  letter-spacing: 1.5px;
+  text-align: center;
+  outline: none;
+}
+
+.open-btn {
+  display: block;
+  width: 150px;
+  height: 50px;
+  padding-top: 8px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  font-family: 'Chilanka', cursive;
+  font-size: 26px;
+  letter-spacing: 2px;
+  background-color: transparent;
+  border: 1px solid black;
+  box-shadow: 0 0 0 60px rgba(0, 0, 0, 0) inset, .1em .1em .2em gray;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.open-btn:hover {
+  background-color: rgba(0, 0, 0, .03);
+}
+
+.open-btn:active {
+  top: .1em;
+  left: .1em;
+  box-shadow: 0 0 0 60px rgba(0, 0, 0, .05) inset;
+}
+
+.keyboard {
+  display: block;
+  position: fixed;
+  box-sizing: border-box;
+  width: 70%;
+  bottom: 10%;
+  transition: bottom 1s;
+  left: 15%;
+  margin: 0 auto;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  -webkit-transition: bottom 1s;
+  -moz-transition: bottom 1s;
+  -ms-transition: bottom 1s;
+  -o-transition: bottom 1s;
+}
+
+.keyboard__hidden {
+  bottom: -100%;
+  transition: bottom 2s;
+  -webkit-transition: bottom 2s;
+  -moz-transition: bottom 2s;
+  -ms-transition: bottom 2s;
+  -o-transition: bottom 2s;
+}
+
+.keyboard__keys {
+  text-align: center;
+ 
+  
+}
+
+.keyboard__key {
+  box-sizing: border-box;
+  padding-top: 8px;
+  width: 7%;
+  min-height: 7%;
+  margin: 3px;
+  font-family: 'Chilanka', cursive;
+  font-size: 26px;
+  letter-spacing: 2px;
+  background-color: transparent;
+  border: 1px solid black;
+  box-shadow: 0 0 0 60px rgba(0, 0, 0, 0) inset, .1em .1em .2em gray;
+  border-radius: 3px;
+  -webkit-border-radius:;
+  -moz-border-radius:;
+  -ms-border-radius:;
+  -o-border-radius:;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: top;
+
+}
+
+.keyboard__key:hover {
+  background-color: rgba(0, 0, 0, .03);
+}
+
+.keyboard__key:active {
+  top: .1em;
+  left: .1em;
+  box-shadow: 0 0 0 60px rgba(0, 0, 0, .05) inset;
+}
+
+.keyboard__key--double {
+  -webkit-tap-highlight-color: transparent;
+  padding: 7px;
+  flex-shrink: 2;
+  width: 12%;
+}
+
+.keyboard__key--space {
+  width: 48%;
+}
+
+.keyboard__key--activable::after{
+  content:"";
+  top:10px;
+  right:10px;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.4);
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.keyboard__key--active::after{
+  background: #00ff00;
+}
