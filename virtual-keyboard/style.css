@@ -1,5 +1,22 @@
+
+/* @font-face {
+  font-family: "Mandy's Sketch";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/18117.otf");
+    
+} */
+
+@font-face {
+  font-family: "Diamond Girl Skinny";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/19689.otf");
+    
+}
+
 body {
-  font-family: 'Chilanka', cursive;
+  font-family: "Diamond Girl Skinny", cursive;
   font-size: 20px;
   letter-spacing: 1.5px;
 
@@ -20,8 +37,9 @@ h1 {
   padding: 10px;
   margin-bottom: 30px;
   border-radius: 5px;
-  font-family: 'Chilanka', cursive;
+  font-family: "Diamond Girl Skinny", cursive;
   font-size: 24px;
+  font-weight: bold;
   letter-spacing: 1.5px;
   text-align: left;
   outline: none;
@@ -31,11 +49,11 @@ h1 {
   display: block;
   width: 150px;
   height: 50px;
-  padding-top: 8px;
   margin: 0 auto;
   margin-bottom: 30px;
-  font-family: 'Chilanka', cursive;
+  font-family: "Diamond Girl Skinny", cursive;
   font-size: 26px;
+  font-weight: bold;
   letter-spacing: 2px;
   background-color: transparent;
   border: 1px solid black;
@@ -64,26 +82,33 @@ h1 {
   position: absolute;
   box-sizing: border-box;
   width: 70%;
-  bottom: 8vh;
-  transition: bottom 1s;
+  animation-name: my-animation;
+  animation-duration:3s;
   left: 15%;
   margin: 0 auto;
   padding: 5px;
-  border: 1px solid black;
-  border-radius: 5px;
-  -webkit-transition: bottom 1s;
-  -moz-transition: bottom 1s;
-  -ms-transition: bottom 1s;
-  -o-transition: bottom 1s;
+  -webkit-transition: transform 2s;
+  -moz-transition: transform 2s;
+  -ms-transition: transform 2s;
+  -o-transition: transform 2s;
+  -webkit-transform:;
+  -moz-transform:;
+  -ms-transform:;
+  -o-transform:;
+}
+
+@keyframes my-animation {
+  0%   { opacity: 0.2; }
+  100% { opacity: 1; }
 }
 
 .keyboard__hidden {
-  bottom: -100%;
-  transition: bottom 2s;
-  -webkit-transition: bottom 2s;
-  -moz-transition: bottom 2s;
-  -ms-transition: bottom 2s;
-  -o-transition: bottom 2s;
+  display: none;
+  transition: display 2s;
+  -webkit-transition: display 2s;
+  -moz-transition: display 2s;
+  -ms-transition: display 2s;
+  -o-transition: display 2s;
 }
 
 .keyboard__keys {
@@ -94,12 +119,13 @@ h1 {
 
 .keyboard__key {
   box-sizing: border-box;
-  padding-top: 8px;
   width: 7%;
   min-height: 7%;
+  padding: 3px 0 4px 0;
   margin: 3px;
-  font-family: 'Chilanka', cursive;
+  font-family: "Diamond Girl Skinny", cursive;
   font-size: 26px;
+  font-weight: bold;
   letter-spacing: 2px;
   background-color: transparent;
   border: 1px solid black;
@@ -161,10 +187,11 @@ h1 {
 
 @media (max-width: 800px){
   body{
-    font-size: 12px;
+    font-size: 9px;
   }
   .keyboard-output{
     width: 90%;
+    font-size: 16px;
     margin-bottom: 10px;
   }
 
@@ -174,7 +201,9 @@ h1 {
   }
 
   .keyboard__key{
-    width: 8%;
+    width: 7.6%;
+    min-height: 20px;
+    font-size: 16px;
     min-height: 5%;
     margin: 2px;
   }
@@ -189,5 +218,20 @@ h1 {
     padding-top: 6px;
     margin: 0 auto;   
     font-size: 20px;
+  }
+
+  .material-icons{
+    font-size: 12px;
+  }
+
+  .keyboard__key--activable::after{
+    top:3px;
+    right:3px;
+    width: 5px;
+    height: 5px;
+  }
+
+  .keyboard__hidden{
+    display: none;
   }
 }
