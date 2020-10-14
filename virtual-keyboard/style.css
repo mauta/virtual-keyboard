@@ -3,17 +3,19 @@ body {
   font-size: 20px;
   letter-spacing: 1.5px;
 
+ 
 }
 
 h1 {
   text-align: center;
+ 
 }
 
 .keyboard-output {
   display: block;
   box-sizing: border-box;
   width: 70%;
-  min-height: 30%;
+  min-height: 20%;
   margin: 0 auto;
   padding: 10px;
   margin-bottom: 30px;
@@ -21,7 +23,7 @@ h1 {
   font-family: 'Chilanka', cursive;
   font-size: 24px;
   letter-spacing: 1.5px;
-  text-align: center;
+  text-align: left;
   outline: none;
 }
 
@@ -59,10 +61,10 @@ h1 {
 
 .keyboard {
   display: block;
-  position: fixed;
+  position: absolute;
   box-sizing: border-box;
   width: 70%;
-  bottom: 10%;
+  bottom: 8vh;
   transition: bottom 1s;
   left: 15%;
   margin: 0 auto;
@@ -155,4 +157,37 @@ h1 {
 
 .keyboard__key--active::after{
   background: #00ff00;
+}
+
+@media (max-width: 800px){
+  body{
+    font-size: 12px;
+  }
+  .keyboard-output{
+    width: 90%;
+    margin-bottom: 10px;
+  }
+
+  .keyboard{
+    width: 90%;
+    left: 5%;
+  }
+
+  .keyboard__key{
+    width: 8%;
+    min-height: 5%;
+    margin: 2px;
+  }
+
+  .keyboard__key--space {
+    width: 48%;
+  }
+
+  .open-btn{
+    width: 120px;
+    height: 30px;
+    padding-top: 6px;
+    margin: 0 auto;   
+    font-size: 20px;
+  }
 }
