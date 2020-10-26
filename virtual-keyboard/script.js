@@ -25,7 +25,7 @@ keyboard.appendChild(keyboardKeys)
 
 
 const keysBtnAll = [
-  "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
+  "esc",{top:"!",down:"1"}, {top:"@",down:"2"}, {top:"#",down:"3"},{top:"$",down:"4"}, {top:"%",down:"5"}, {top:"^",down:"6"}, {top:"&",down:"7"}, {top:"*",down:"8"}, {top:"(",down:"9"}, {top:")",down:"0"}, {top:"_",down:"-"}, {top:"+",down:"="}, "backspace",
   "tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
   "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
   "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
@@ -43,64 +43,75 @@ const toggleCapsLock = () => {
   }
 }
 
+console.log(keysBtnAll[1])
+console.log(typeof keysBtnAll[1])
+
 keysBtnAll.forEach(elem => {
   const keyElement = document.createElement("button")
   const insertLineBreak = ["backspace", "p", "enter", "?"].indexOf(elem) !== -1
   keyElement.classList.add("keyboard__key")
   keyElement.setAttribute("type", "button")
 
+  if(typeof elem ==='object'){
+    keyElement.textContent = elem.down
+    keyElement.classList.add('keyboard__key--switch')
+  } else {
+    switch (elem) {
 
-  switch (elem) {
-    case "backspace":
-      keyElement.classList.add("keyboard__key--double")
-      keyElement.innerHTML = `<i class="material-icons">${'backspace'}</i>`
-      keyElement.addEventListener('click', () => {
-        keyboardOutput.textContent = keyboardOutput.textContent.slice(0,keyboardOutput.textContent.length-1)
-      })
-      break;
-
-    case "space":
-      keyElement.classList.add("keyboard__key--space")
-      keyElement.innerHTML = `<i class="material-icons">${'space_bar'}</i>`
-      keyElement.addEventListener('click', () => {
-        keyboardOutput.textContent += ' '
-      })
-      break;
-
-    case "caps":
-      keyElement.classList.add('keyboard__key--double', 'keyboard__key--activable')
-      keyElement.innerHTML = `<i class="material-icons">${'keyboard_capslock'}</i>`
-
-      keyElement.addEventListener('click', function () {
-        keyElement.classList.toggle('keyboard__key--active')
-        toggleCapsLock()
-      })
-      break;
-
-    case "enter":
-      keyElement.classList.add("keyboard__key--double")
-      keyElement.innerHTML = `<i class="material-icons">${'keyboard_return'}</i>`
-      keyElement.addEventListener('click', () => {
-        keyboardOutput.textContent += '\n'
-      })
-      break;
-      case "tab":
+      case "backspace":
         keyElement.classList.add("keyboard__key--double")
-        keyElement.innerHTML = `<i class="material-icons">${'keyboard_tab'}</i>`
+        keyElement.innerHTML = `<i class="material-icons">${'backspace'}</i>`
         keyElement.addEventListener('click', () => {
-          keyboardOutput.textContent += '    '
+          keyboardOutput.textContent = keyboardOutput.textContent.slice(0,keyboardOutput.textContent.length-1)
         })
         break;
-
-    default:
-      capslock ? keyElement.textContent = elem.toUpperCase() : keyElement.textContent = elem.toLowerCase()
-
-      keyElement.addEventListener('click', () => {
-        keyboardOutput.textContent += capslock ? elem.toUpperCase() : elem.toLowerCase()
-      })
-
-      break;
+  
+      case "space":
+        keyElement.classList.add("keyboard__key--space")
+        keyElement.innerHTML = `<i class="material-icons">${'space_bar'}</i>`
+        keyElement.addEventListener('click', () => {
+          keyboardOutput.textContent += ' '
+        })
+        break;
+  
+      case "caps":
+        keyElement.classList.add('keyboard__key--double', 'keyboard__key--activable')
+        keyElement.innerHTML = `<i class="material-icons">${'keyboard_capslock'}</i>`
+  
+        keyElement.addEventListener('click', function () {
+          keyElement.classList.toggle('keyboard__key--active')
+          toggleCapsLock()
+        })
+        break;
+  
+      case "enter":
+        keyElement.classList.add("keyboard__key--double")
+        keyElement.innerHTML = `<i class="material-icons">${'keyboard_return'}</i>`
+        keyElement.addEventListener('click', () => {
+          keyboardOutput.textContent += '\n'
+        })
+        break;
+        case "tab":
+          keyElement.classList.add("keyboard__key--double")
+          keyElement.innerHTML = `<i class="material-icons">${'keyboard_tab'}</i>`
+          keyElement.addEventListener('click', () => {
+            keyboardOutput.textContent += '    '
+          })
+          break;
+  
+      default:
+        capslock ? keyElement.textContent = elem.toUpperCase() : keyElement.textContent = elem.toLowerCase()
+  
+        keyElement.addEventListener('click', () => {
+          keyboardOutput.textContent += capslock ? elem.toUpperCase() : elem.toLowerCase()
+        })
+  
+        break;
+    }
   }
+
+
+
 
   keyboardKeys.appendChild(keyElement)
 
