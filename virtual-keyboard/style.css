@@ -81,20 +81,21 @@ h1 {
   display: block;
   position: absolute;
   box-sizing: border-box;
-  width: 70%;
+  width: 75%;
   animation-name: my-animation;
   animation-duration:3s;
-  left: 15%;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0 auto;
   padding: 5px;
   -webkit-transition: transform 2s;
   -moz-transition: transform 2s;
   -ms-transition: transform 2s;
   -o-transition: transform 2s;
-  -webkit-transform:;
-  -moz-transform:;
-  -ms-transform:;
-  -o-transform:;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
 }
 
 @keyframes my-animation {
@@ -103,7 +104,7 @@ h1 {
 }
 
 .keyboard__hidden {
-  display: none;
+  display: block;
   transition: display 2s;
   -webkit-transition: display 2s;
   -moz-transition: display 2s;
@@ -113,13 +114,12 @@ h1 {
 
 .keyboard__keys {
   text-align: center;
- 
   
 }
 
 .keyboard__key {
   box-sizing: border-box;
-  width: 7%;
+  width: 5%;
   min-height: 7%;
   padding: 3px 0 4px 0;
   margin: 3px;
@@ -131,10 +131,6 @@ h1 {
   border: 1px solid black;
   box-shadow: 0 0 0 60px rgba(0, 0, 0, 0) inset, .1em .1em .2em gray;
   border-radius: 3px;
-  -webkit-border-radius:;
-  -moz-border-radius:;
-  -ms-border-radius:;
-  -o-border-radius:;
   outline: none;
   cursor: pointer;
   position: relative;
@@ -143,6 +139,18 @@ h1 {
   justify-content: center;
   vertical-align: top;
 
+}
+
+.keyboard__key--switch{
+display: initial;
+position: relative;
+}
+
+.keyboard__key-top{
+  position: absolute;
+ left: 10px;
+ top: 3px;
+  font-size: 16px;
 }
 
 .keyboard__key:hover {
@@ -156,14 +164,15 @@ h1 {
 }
 
 .keyboard__key--double {
-  -webkit-tap-highlight-color: transparent;
-  padding: 7px;
   flex-shrink: 2;
   width: 12%;
 }
 
 .keyboard__key--space {
   width: 48%;
+  height: 7%;
+  box-sizing: border-box;
+  color: transparent;
 }
 
 .keyboard__key--activable::after{
