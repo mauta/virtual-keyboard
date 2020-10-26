@@ -1,5 +1,7 @@
 const openBtn = document.querySelector('.open-btn')
 const keyboardOutput = document.querySelector('.keyboard-output')
+let capslock = false
+let shiftOn = false
 
 openBtn.addEventListener('click', function () {
 
@@ -22,10 +24,6 @@ document.body.append(keyboard)
 let keyboardKeys = document.createElement('div')
 keyboardKeys.className = 'keyboard__keys'
 keyboard.appendChild(keyboardKeys)
-
-
-
-
 
 const keysBtnAllEng = [{
     top: "~",
@@ -84,7 +82,13 @@ const keysBtnAllEng = [{
     top: '"',
     down: '\''
   }, "enter",
-  "shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", {
+  "shift", "z", "x", "c", "v", "b", "n", "m", {
+    top: '<',
+    down: ','
+  }, {
+    top: '>',
+    down: '.'
+  }, {
     top: "?",
     down: "/"
   }, {
@@ -150,27 +154,6 @@ const keysBtnAllRu = [
   }, "sound", "voice", "space", "back", "next"
 ]
 
-let capslock = false
-
-const toggleCapsLock = () => {
-  capslock = !capslock;
-
-  for (const key of document.querySelectorAll('.keyboard__key')) {
-    if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
-      key.textContent = capslock ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
-    }
-  }
-}
-
-const delKeyboard = () => {
-  const keyboardForDel = document.querySelectorAll('.keyboard__key')
-  const brForDel = document.querySelectorAll('br')
-  brForDel.forEach(el => el.remove())
-  keyboardForDel.forEach(el => el.remove())
-}
-
-
-
 const drawKeyboard = (keys) => {
   keys.forEach(elem => {
     const keyElement = document.createElement("button")
@@ -190,10 +173,11 @@ const drawKeyboard = (keys) => {
       keyElement.append(downSymbol)
       if (elem.down === 'shift') {
         keyElement.classList.add("keyboard__key--double")
+        keyElement.classList.add("keyboard__key--shift")
       }
       if (elem.down === 'en' || elem.down === 'ru') {
         keyElement.style.paddingLeft = '25px'
-
+        keyElement.classList.add('keyboard__key--lang')
         keyElement.addEventListener('click', () => {
           if (elem.top === 'en') {
             delKeyboard()
@@ -210,16 +194,12 @@ const drawKeyboard = (keys) => {
         keyElement.firstChild.style.top = '0px'
       }
 
-      keyElement.addEventListener('click', () => {
-        if (elem.down !== 'en' && elem.down !== 'ru')
-          keyboardOutput.textContent += elem.down
-      })
-
     } else {
       switch (elem) {
 
         case "shift":
           keyElement.classList.add("keyboard__key--double")
+          keyElement.classList.add("keyboard__key--shift")
           keyElement.textContent = elem
           break;
 
@@ -281,10 +261,6 @@ const drawKeyboard = (keys) => {
 
 }
 
-var userLang = navigator.language || navigator.userLanguage;
-
-console.log(userLang)
-
 drawKeyboard(keysBtnAllRu)
 
 
@@ -294,12 +270,91 @@ const enterText = () => {
   keyboardOutput.selectionStart = keyboardOutput.value.length;
 }
 
-keyboard.addEventListener('click', (evt) => {
-  console.log('я тут')
-  if (evt.target.classList.contains('keyboard__key')) {
-    let key = evt.target.textContent
 
+const toggleCapsLock = () => {
+  capslock = !capslock;
+
+  for (const key of document.querySelectorAll('.keyboard__key')) {
+    if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
+      key.textContent = capslock ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
+    }
+  }
+}
+
+const toggleShift = () => {
+  shiftOn = !shiftOn
+  let shiftKeys = keyboard.querySelectorAll('.keyboard__key--shift')
+  if (shiftOn) {
+    shiftKeys.forEach(elem =>{
+      elem.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
+      elem.style.top = '.1em'
+      elem.style.left = '.1em'
+    })
+ 
+  } else {
+    shiftKeys.forEach(elem =>{
+      elem.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, 0) inset, .1em .1em .2em gray'
+      elem.style.top = '0'
+      elem.style.left = '0'
+    })
+  }
+
+}
+
+
+
+
+const delKeyboard = () => {
+  const keyboardForDel = document.querySelectorAll('.keyboard__key')
+  const brForDel = document.querySelectorAll('br')
+  brForDel.forEach(el => el.remove())
+  keyboardForDel.forEach(el => el.remove())
+}
+
+
+
+const shiftKeyPress = () => {
+  let switchKeys = keyboard.querySelectorAll('.keyboard__key--switch')
+  switchKeys.forEach(elem => {
+    if (elem.lastChild.textContent === 'shift') {
+      return
+    } else {
+      const top = elem.firstChild.textContent
+      const down = elem.lastChild.textContent
+      elem.firstChild.textContent = down
+      elem.lastChild.textContent = top
+    }
+  })
+  toggleCapsLock()
+
+}
+
+keyboard.addEventListener('click', (evt) => {
+
+  if (evt.target.classList.contains('keyboard__key--switch') || evt.target.parentNode.classList.contains('keyboard__key--switch')) {
+    if (evt.target.classList.contains('keyboard__key--double') || evt.target.parentNode.classList.contains('keyboard__key--double')) {
+      return
+    }
+    if (evt.target.classList.contains('keyboard__key--lang') || evt.target.parentNode.classList.contains('keyboard__key--lang')) {
+      return
+    }
+    if (evt.target.classList.contains('keyboard__key-top')) {
+      keyboardOutput.value += evt.target.nextSibling.textContent
+    } else if (evt.target.classList.contains('keyboard__key--switch')) {
+      keyboardOutput.value += evt.target.lastChild.textContent
+    } else {
+      keyboardOutput.value += evt.target.textContent
+    }
+    enterText()
+
+  } else if (evt.target.classList.contains('keyboard__key')) {
+    let key = evt.target.textContent
+    console.log('и тут я' + evt.target)
     switch (key) {
+      case "shift":
+        shiftKeyPress()
+        toggleShift()
+        break;
       case "backspace":
         keyboardOutput.value = keyboardOutput.value.slice(0, keyboardOutput.value.length - 1)
         enterText()
