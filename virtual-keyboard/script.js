@@ -154,6 +154,12 @@ const keysBtnAllRu = [
   }, "sound", "voice", "space", "back", "next"
 ]
 
+const keysCode = ["Backquote","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7",
+"Digit8","Digit9","Digit0","Minus","Equal","Backspace","Tab","KeyQ","KeyW","KeyE","KeyR","KeyT",
+"KeyY","KeyU","KeyI","KeyO","KeyP","BracketLeft","BracketRight","Backslash","CapsLock","KeyA","KeyS",
+"KeyD","KeyF","KeyG","KeyH","KeyJ","KeyK","KeyL","Semicolon","Quote","Enter","ShiftLeft","KeyZ",
+"KeyX","KeyC","KeyV","KeyB","KeyN","KeyM","Comma","Period","Slash","ShiftRight","","","","Space","ArrowLeft","ArrowRight"]
+
 const drawKeyboard = (keys) => {
   keys.forEach(elem => {
     const keyElement = document.createElement("button")
@@ -254,14 +260,21 @@ const drawKeyboard = (keys) => {
 
     keyboardKeys.appendChild(keyElement)
 
+
     if (insertLineBreak) {
       keyboardKeys.appendChild(document.createElement("br"))
     }
   })
 
+  const Allkeys = keyboard.querySelectorAll('.keyboard__key') 
+
+  for(let  i = 0; i<Allkeys.length; i++){
+    Allkeys[i].setAttribute('data-code',keysCode[i])
+  }
+
 }
 
-drawKeyboard(keysBtnAllRu)
+drawKeyboard(keysBtnAllEng)
 
 
 const enterText = () => {
@@ -286,21 +299,27 @@ const toggleShift = () => {
   let shiftKeys = keyboard.querySelectorAll('.keyboard__key--shift')
   if (shiftOn) {
     shiftKeys.forEach(elem =>{
-      elem.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
-      elem.style.top = '.1em'
-      elem.style.left = '.1em'
-    })
- 
+      btnPressON(elem)
+    }) 
   } else {
     shiftKeys.forEach(elem =>{
-      elem.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, 0) inset, .1em .1em .2em gray'
-      elem.style.top = '0'
-      elem.style.left = '0'
+      btnPressOFF(elem)
     })
   }
 
 }
 
+const btnPressON = (btn) => {
+  btn.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
+  btn.style.top = '.1em'
+  btn.style.left = '.1em'  
+}
+
+const btnPressOFF = (btn) => {
+  btn.style.boxShadow = ''
+  btn.style.top = ''
+  btn.style.left = ''  
+}
 
 
 
@@ -380,13 +399,26 @@ keyboard.addEventListener('click', (evt) => {
         enterText()
         break;
     }
-
-
   }
-
-
-
-
-
-
 })
+
+const keyPress = (btn) => {
+const allKeys = keyboard.querySelectorAll('.keyboard__key')
+allKeys.forEach(elem =>{
+  if(elem.getAttribute('data-code') === btn.code){
+    btnPressON(elem)
+  }
+})
+}
+const keyUnpress = (btn) => {
+  const allKeys = keyboard.querySelectorAll('.keyboard__key')
+  allKeys.forEach(elem =>{
+    if(elem.getAttribute('data-code') === btn.code){
+      btnPressOFF(elem)
+    }
+  })
+}
+
+keyboardOutput.addEventListener('keydown', keyPress)
+
+document.addEventListener('keyup', keyUnpress)
