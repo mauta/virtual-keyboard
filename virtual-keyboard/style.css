@@ -8,15 +8,15 @@
 } */
 
 @font-face {
-  font-family: "Diamond Girl Skinny";
+  font-family: "PenguinAttack";
   font-style: normal;
   font-weight: 400;
-  src: url("fonts/19689.otf");
+  src: url("fonts/18117.otf");
     
 }
 
 body {
-  font-family: "Diamond Girl Skinny", cursive;
+  font-family: "PenguinAttack", cursive;
   font-size: 20px;
   letter-spacing: 1.5px;
 
@@ -37,9 +37,9 @@ h1 {
   padding: 10px;
   margin-bottom: 30px;
   border-radius: 5px;
-  font-family: "Diamond Girl Skinny", cursive;
+  font-family: "PenguinAttack", cursive;
   font-size: 24px;
-  font-weight: bold;
+  font-weight: normal;
   letter-spacing: 1.5px;
   text-align: left;
   outline: none;
@@ -51,9 +51,9 @@ h1 {
   height: 50px;
   margin: 0 auto;
   margin-bottom: 30px;
-  font-family: "Diamond Girl Skinny", cursive;
+  font-family: "PenguinAttack", cursive;
   font-size: 26px;
-  font-weight: bold;
+  font-weight: normal;
   letter-spacing: 2px;
   background-color: transparent;
   border: 1px solid black;
@@ -81,7 +81,7 @@ h1 {
   display: block;
   position: absolute;
   box-sizing: border-box;
-  width: 75%;
+  width: 1000px;
   animation-name: my-animation;
   animation-duration:3s;
   left: 50%;
@@ -127,9 +127,9 @@ h1 {
   min-height: 7%;
   padding: 3px 0 4px 0;
   margin: 3px;
-  font-family: "Diamond Girl Skinny", cursive;
+  font-family: "PenguinAttack", cursive;
   font-size: 26px;
-  font-weight: bold;
+  font-weight: normal;
   letter-spacing: 2px;
   background-color: transparent;
   border: 1px solid black;
@@ -150,12 +150,49 @@ display: initial;
 position: relative;
 }
 
+.keyboard__key--backspace{
+  color: transparent;
+  background-image: url(img/backspace.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 55%;
+}
+.keyboard__key--back{
+  color: transparent;
+  background-image: url(img/left48.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 55%;
+}
+.keyboard__key--next{
+  color: transparent;
+  background-image: url(img/right26.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 55%;
+}
+
 .keyboard__key-top{
   position: absolute;
- left: 10px;
- top: 3px;
+ left: 3px;
+ top: 2px;
   font-size: 16px;
 }
+
+.keyboard__key-down{
+padding-left: 15px;
+}
+
+.keyboard__key--lang .keyboard__key-top{
+  left: 3px;
+  top: 0px;
+  font-size: 12px;
+}
+
+.keyboard__key--lang .keyboard__key-down{
+  padding-left: 17px;
+}
+
 
 .keyboard__key:hover {
   background-color: rgba(0, 0, 0, .03);
@@ -196,6 +233,36 @@ position: relative;
 
 .keyboard__key--active::after{
   background: #00ff00;
+}
+
+.keyboard__key--sound-on{
+  color: transparent;
+  background-image: url(img/sound_on.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.keyboard__key--sound-off{
+  color: transparent;
+  background-image: url(img/sound_off.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.keyboard__key--voice-on{
+  color: transparent;
+  background-image: url(img/mic_on.svg);
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.keyboard__key--voice-off{
+  color: transparent;
+  background-image: url(img/mic_off.svg);
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 @media (max-width: 800px){

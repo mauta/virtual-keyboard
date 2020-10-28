@@ -2,16 +2,29 @@ const openBtn = document.querySelector('.open-btn')
 const keyboardOutput = document.querySelector('.keyboard-output')
 let capslock = false
 let shiftOn = false
+let soundOn = true
+let language = 'eng'
+let audio
 
 openBtn.addEventListener('click', function () {
 
   if (keyboard.classList.contains('keyboard__hidden')) {
     keyboard.classList.toggle('keyboard__hidden')
     openBtn.textContent = 'close me'
+    openBtn.setAttribute('data-open', 'close')
     keyboardOutput.focus()
+    if (soundOn) {
+      const audio = document.querySelector(`audio[data-open = 'open']`)
+      audio.play()
+    }
   } else {
     keyboard.classList.toggle('keyboard__hidden')
+    openBtn.setAttribute('data-open', 'open')
     openBtn.textContent = 'open me'
+    if (soundOn) {
+      const audio = document.querySelector(`audio[data-open = 'close']`)
+      audio.play()
+    }
   }
 
 })
@@ -154,11 +167,14 @@ const keysBtnAllRu = [
   }, "sound", "voice", "space", "back", "next"
 ]
 
-const keysCode = ["Backquote","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7",
-"Digit8","Digit9","Digit0","Minus","Equal","Backspace","Tab","KeyQ","KeyW","KeyE","KeyR","KeyT",
-"KeyY","KeyU","KeyI","KeyO","KeyP","BracketLeft","BracketRight","Backslash","CapsLock","KeyA","KeyS",
-"KeyD","KeyF","KeyG","KeyH","KeyJ","KeyK","KeyL","Semicolon","Quote","Enter","ShiftLeft","KeyZ",
-"KeyX","KeyC","KeyV","KeyB","KeyN","KeyM","Comma","Period","Slash","ShiftRight","","","","Space","ArrowLeft","ArrowRight"]
+const keysCode = ["Backquote", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7",
+  "Digit8", "Digit9", "Digit0", "Minus", "Equal", "Backspace", "Tab", "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT",
+  "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight", "Backslash", "CapsLock", "KeyA", "KeyS",
+  "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Enter", "ShiftLeft", "KeyZ",
+  "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "ShiftRight", "", "", "", "Space", "ArrowLeft", "ArrowRight"
+]
+
+const likeLetters = ["Backquote", "Minus", "Equal", "BracketLeft", "BracketRight", "Backslash", "Semicolon", "Quote", "Comma", "Period", "Slash"]
 
 const drawKeyboard = (keys) => {
   keys.forEach(elem => {
@@ -180,15 +196,22 @@ const drawKeyboard = (keys) => {
       if (elem.down === 'shift') {
         keyElement.classList.add("keyboard__key--double")
         keyElement.classList.add("keyboard__key--shift")
+
       }
       if (elem.down === 'en' || elem.down === 'ru') {
-        keyElement.style.paddingLeft = '25px'
         keyElement.classList.add('keyboard__key--lang')
+        keyElement.setAttribute('data-key', 'lang')
         keyElement.addEventListener('click', () => {
+          if (soundOn) {
+            const audio = document.querySelector(`audio[data-key = 'lang']`)
+            audio.play()
+          }
           if (elem.top === 'en') {
+            language = "eng"
             delKeyboard()
             drawKeyboard(keysBtnAllEng)
           } else {
+            language = "rus"
             delKeyboard()
             drawKeyboard(keysBtnAllRu)
           }
@@ -211,6 +234,7 @@ const drawKeyboard = (keys) => {
 
         case "backspace":
           keyElement.classList.add("keyboard__key--double")
+          keyElement.classList.add("keyboard__key--backspace")
           keyElement.textContent = elem
           break;
 
@@ -220,7 +244,7 @@ const drawKeyboard = (keys) => {
           break;
 
         case "caps":
-          keyElement.classList.add('keyboard__key--double', 'keyboard__key--activable')
+          keyElement.classList.add('keyboard__key--double', 'keyboard__key--activable', 'keyboard__key--caps')
           keyElement.textContent = elem
           break;
 
@@ -235,19 +259,19 @@ const drawKeyboard = (keys) => {
           break;
         case "sound":
           keyElement.textContent = elem
-          // отрисовка кнопки
+          keyElement.classList.add("keyboard__key--sound-on")
           break;
         case "voice":
           keyElement.textContent = elem
-          // отрисовка кнопки
+          keyElement.classList.add("keyboard__key--voice-off")
           break;
         case "back":
           keyElement.textContent = elem
-          // отрисовка кнопки
+          keyElement.classList.add("keyboard__key--back")
           break;
         case "next":
           keyElement.textContent = elem
-          // отрисовка кнопки
+          keyElement.classList.add("keyboard__key--next")
           break;
         default:
           capslock ? keyElement.textContent = elem.toUpperCase() : keyElement.textContent = elem.toLowerCase()
@@ -266,10 +290,10 @@ const drawKeyboard = (keys) => {
     }
   })
 
-  const Allkeys = keyboard.querySelectorAll('.keyboard__key') 
+  const Allkeys = keyboard.querySelectorAll('.keyboard__key')
 
-  for(let  i = 0; i<Allkeys.length; i++){
-    Allkeys[i].setAttribute('data-code',keysCode[i])
+  for (let i = 0; i < Allkeys.length; i++) {
+    Allkeys[i].setAttribute('data-code', keysCode[i])
   }
 
 }
@@ -298,27 +322,28 @@ const toggleShift = () => {
   shiftOn = !shiftOn
   let shiftKeys = keyboard.querySelectorAll('.keyboard__key--shift')
   if (shiftOn) {
-    shiftKeys.forEach(elem =>{
+    shiftKeys.forEach(elem => {
       btnPressON(elem)
-    }) 
+    })
   } else {
-    shiftKeys.forEach(elem =>{
+    shiftKeys.forEach(elem => {
       btnPressOFF(elem)
     })
   }
-
 }
+
+
 
 const btnPressON = (btn) => {
   btn.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
   btn.style.top = '.1em'
-  btn.style.left = '.1em'  
+  btn.style.left = '.1em'
 }
 
 const btnPressOFF = (btn) => {
   btn.style.boxShadow = ''
   btn.style.top = ''
-  btn.style.left = ''  
+  btn.style.left = ''
 }
 
 
@@ -335,7 +360,7 @@ const delKeyboard = () => {
 const shiftKeyPress = () => {
   let switchKeys = keyboard.querySelectorAll('.keyboard__key--switch')
   switchKeys.forEach(elem => {
-    if (elem.lastChild.textContent === 'shift') {
+    if (elem.lastChild.textContent === 'shift' || elem.lastChild.textContent === 'en' || elem.lastChild.textContent === 'ru') {
       return
     } else {
       const top = elem.firstChild.textContent
@@ -345,56 +370,130 @@ const shiftKeyPress = () => {
     }
   })
   toggleCapsLock()
+  enterText()
+}
+
+const keyClick = (evt) = {
 
 }
 
 keyboard.addEventListener('click', (evt) => {
-
   if (evt.target.classList.contains('keyboard__key--switch') || evt.target.parentNode.classList.contains('keyboard__key--switch')) {
     if (evt.target.classList.contains('keyboard__key--double') || evt.target.parentNode.classList.contains('keyboard__key--double')) {
-      return
+      if (soundOn) {
+        audio = document.querySelector('audio[data-code = "Shift"]')
+        audio.currentTime = 0
+        audio.play()
+      }
+      shiftKeyPress()
+      toggleShift()
     }
     if (evt.target.classList.contains('keyboard__key--lang') || evt.target.parentNode.classList.contains('keyboard__key--lang')) {
       return
     }
-    if (evt.target.classList.contains('keyboard__key-top')) {
-      keyboardOutput.value += evt.target.nextSibling.textContent
+
+    let btnPress
+
+
+    if (evt.target.classList.contains('keyboard__key-top') || evt.target.classList.contains('keyboard__key-down')) {
+      btnPress = evt.target.parentNode
     } else if (evt.target.classList.contains('keyboard__key--switch')) {
-      keyboardOutput.value += evt.target.lastChild.textContent
-    } else {
-      keyboardOutput.value += evt.target.textContent
+      btnPress = evt.target
     }
+    if (soundOn) {
+      let digit = btnPress.getAttribute('data-code')
+      if (likeLetters.includes(digit)) {
+        (language === 'rus') ? audio = document.querySelector("audio[data-code = 'letter']"): audio = document.querySelector("audio[data-code = 'english']")
+        audio.currentTime = 0
+        audio.play()
+      } else {
+        const audio = document.querySelector(`audio[data-code = "${digit}"]`)
+        audio.currentTime = 0
+        audio.play()
+      }
+
+    }
+    keyboardOutput.value += btnPress.lastChild.textContent
     enterText()
 
   } else if (evt.target.classList.contains('keyboard__key')) {
     let key = evt.target.textContent
-    console.log('и тут я' + evt.target)
     switch (key) {
+      case "sound":
+        soundOn = !soundOn
+        evt.target.classList.toggle('keyboard__key--sound-on')
+        evt.target.classList.toggle('keyboard__key--sound-off')
+        break;
+        case "voice":
+          evt.target.classList.toggle('keyboard__key--voice-on')
+          evt.target.classList.toggle('keyboard__key--voice-off')
+          break;
       case "shift":
+        if (soundOn) {
+          audio = document.querySelector("audio[data-code = 'Shift']")
+          audio.currentTime = 0
+          audio.play()
+        }
         shiftKeyPress()
         toggleShift()
         break;
       case "backspace":
+        if (soundOn) {
+          audio = document.querySelector("audio[data-code = 'BackSpace']")
+          audio.currentTime = 0
+          audio.play()
+        }
         keyboardOutput.value = keyboardOutput.value.slice(0, keyboardOutput.value.length - 1)
         enterText()
         break;
       case "space":
+        if (soundOn) {
+          audio = document.querySelector("audio[data-code = 'Space']")
+          audio.currentTime = 0
+          audio.play()
+        }
         keyboardOutput.value += ' '
         enterText()
         break;
       case "caps":
+        if (soundOn) {
+          audio = document.querySelector("audio[data-code = 'CapsLock']")
+          audio.currentTime = 0
+          audio.play()
+        }
         evt.target.classList.toggle('keyboard__key--active')
         toggleCapsLock()
+        enterText()
         break;
       case "enter":
+        if (soundOn) {
+          audio = document.querySelector("audio[data-code = 'Enter']")
+          audio.currentTime = 0
+          audio.play()
+        }
         keyboardOutput.value += '\n'
         enterText()
         break;
       case "tab":
+        if (soundOn) {
+          audio = document.querySelector("audio[data-code = 'CapsLock']")
+          audio.currentTime = 0
+          audio.play()
+        }
         keyboardOutput.value += '    '
         enterText()
         break;
       default:
+        if (soundOn) {
+
+          if (language === 'rus') {
+            audio = document.querySelector("audio[data-code = 'letter']")
+          } else if (language === 'eng') {
+            audio = document.querySelector("audio[data-code = 'english']")
+          }
+          audio.currentTime = 0
+          audio.play()
+        }
         keyboardOutput.value += key
         enterText()
         break;
@@ -402,18 +501,41 @@ keyboard.addEventListener('click', (evt) => {
   }
 })
 
+
+
+
+
+
 const keyPress = (btn) => {
-const allKeys = keyboard.querySelectorAll('.keyboard__key')
-allKeys.forEach(elem =>{
-  if(elem.getAttribute('data-code') === btn.code){
-    btnPressON(elem)
-  }
-})
+  const allKeys = keyboard.querySelectorAll('.keyboard__key')
+  allKeys.forEach(elem => {
+    if (elem.getAttribute('data-code') === btn.code) {
+      btnPressON(elem)
+
+      if (btn.code === 'CapsLock') {
+        keyboard.querySelector('.keyboard__key--caps').classList.toggle('keyboard__key--active')
+        toggleCapsLock()
+      }
+
+      if (btn.code === 'ShiftRight' || btn.code === 'ShiftLeft') {
+        shiftKeyPress()
+        toggleShift()
+      }
+
+    }
+  })
 }
 const keyUnpress = (btn) => {
   const allKeys = keyboard.querySelectorAll('.keyboard__key')
-  allKeys.forEach(elem =>{
-    if(elem.getAttribute('data-code') === btn.code){
+  allKeys.forEach(elem => {
+    if (elem.getAttribute('data-code') === btn.code) {
+      if (btn.code === 'ShiftRight' || btn.code === 'ShiftLeft') {
+        return
+      }
+      if (btn.code === 'Tab') {
+        keyboardOutput.value += '    '
+        enterText()
+      }
       btnPressOFF(elem)
     }
   })
