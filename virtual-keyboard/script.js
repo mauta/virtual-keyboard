@@ -387,9 +387,7 @@ const shiftKeyPress = () => {
   enterText()
 }
 
-const keyClick = (evt) = {
 
-}
 
 keyboard.addEventListener('click', (evt) => {
   cursorPos = keyboardOutput.selectionStart;
@@ -556,15 +554,32 @@ keyboard.addEventListener('click', (evt) => {
 })
 
 
+const clearOutput = () => {
+  cursorPos = 0
+  left = ''
+  right = ''
+  keyboardOutput.value = ''
+  keyboardOutput.textContent = ''
+}
 
-// ["Backquote", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7",
-//   "Digit8", "Digit9", "Digit0", "Minus", "Equal", "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT",
-//   "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight", "Backslash", "CapsLock", "KeyA", "KeyS",
-//   "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "KeyZ",
-//   "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "ShiftRight" 
-// ]
+let clearAll
 
+let btnBcsp = document.querySelector('.keyboard__key--backspace')
 
+btnBcsp.addEventListener('mousedown',()=>{
+  let mouserun = () =>{
+    document.removeEventListener('mouseup',mouserun)
+    console.log('удалили')
+    clearTimeout(clearAll )
+  }
+  let standart = () =>{
+    clearOutput()
+     document.removeEventListener('mouseup',mouserun)
+  }
+  clearAll = setTimeout(standart,700)
+  
+  document.addEventListener('mouseup',mouserun)
+})
 
 
 const keyPress = (btn) => {
@@ -574,7 +589,7 @@ const keyPress = (btn) => {
       btnPressON(elem)
       let digit = elem.getAttribute('data-code')
       if (digit.slice(0, 5) === 'Digit') {
-         const audio = document.querySelector(`audio[data-code = "${digit}"]`)
+        const audio = document.querySelector(`audio[data-code = "${digit}"]`)
         audio.currentTime = 0
         audio.play()
       }
@@ -631,6 +646,8 @@ const keyPress = (btn) => {
           audio.currentTime = 0
           audio.play()
         }
+
+        clearAll = setTimeout(clearOutput,700)   
       }
 
       if (btn.code === 'Enter') {
@@ -661,6 +678,8 @@ const keyPress = (btn) => {
 }
 
 const keyUnpress = (btn) => {
+  console.log('отпустила')
+  clearTimeout(clearAll )
   const allKeys = keyboard.querySelectorAll('.keyboard__key')
   allKeys.forEach(elem => {
     if (elem.getAttribute('data-code') === btn.code) {
