@@ -5,33 +5,39 @@ let shiftOn = false
 let soundOn = true
 let language = 'eng'
 let audio
+let cursorPos
+let left
+let right
+let isKeyboardOpen = false
 
 openBtn.addEventListener('click', function () {
-
-  if (keyboard.classList.contains('keyboard__hidden')) {
-    keyboard.classList.toggle('keyboard__hidden')
+  if (!isKeyboardOpen) {
+    keyboard.classList.add('keyboard-on')
+    keyboard.classList.remove('keyboard-off')
+    isKeyboardOpen = !isKeyboardOpen
     openBtn.textContent = 'close me'
     openBtn.setAttribute('data-open', 'close')
     keyboardOutput.focus()
     if (soundOn) {
-      const audio = document.querySelector(`audio[data-open = 'open']`)
+      audio = document.querySelector(`audio[data-open = 'open']`)
       audio.play()
     }
-  } else {
-    keyboard.classList.toggle('keyboard__hidden')
+  } else if (isKeyboardOpen) {
+    keyboard.classList.add('keyboard-off')
+    keyboard.classList.remove('keyboard-on')
+    isKeyboardOpen = !isKeyboardOpen
     openBtn.setAttribute('data-open', 'open')
     openBtn.textContent = 'open me'
     if (soundOn) {
-      const audio = document.querySelector(`audio[data-open = 'close']`)
+      audio = document.querySelector(`audio[data-open = 'close']`)
       audio.play()
     }
   }
-
 })
 
 
 let keyboard = document.createElement('div')
-keyboard.classList.add('keyboard', 'keyboard__hidden')
+keyboard.classList.add('keyboard')
 document.body.append(keyboard)
 
 let keyboardKeys = document.createElement('div')
@@ -244,6 +250,9 @@ const drawKeyboard = (keys) => {
           break;
 
         case "caps":
+          if (capslock) {
+            keyElement.classList.add('keyboard__key--active')
+          }
           keyElement.classList.add('keyboard__key--double', 'keyboard__key--activable', 'keyboard__key--caps')
           keyElement.textContent = elem
           break;
@@ -259,7 +268,11 @@ const drawKeyboard = (keys) => {
           break;
         case "sound":
           keyElement.textContent = elem
-          keyElement.classList.add("keyboard__key--sound-on")
+          if (soundOn) {
+            keyElement.classList.add("keyboard__key--sound-on")
+          } else {
+            keyElement.classList.add("keyboard__key--sound-off")
+          }
           break;
         case "voice":
           keyElement.textContent = elem
@@ -302,15 +315,16 @@ drawKeyboard(keysBtnAllEng)
 
 
 const enterText = () => {
+  keyboardOutput.value = left + right
   keyboardOutput.textContent = keyboardOutput.value
   keyboardOutput.focus()
-  keyboardOutput.selectionStart = keyboardOutput.value.length;
+  keyboardOutput.selectionStart = cursorPos
+  keyboardOutput.selectionEnd = cursorPos
 }
 
 
 const toggleCapsLock = () => {
-  capslock = !capslock;
-
+  capslock = !capslock
   for (const key of document.querySelectorAll('.keyboard__key')) {
     if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
       key.textContent = capslock ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
@@ -378,6 +392,12 @@ const keyClick = (evt) = {
 }
 
 keyboard.addEventListener('click', (evt) => {
+  cursorPos = keyboardOutput.selectionStart;
+  left = keyboardOutput.value.slice(0, cursorPos);
+  right = keyboardOutput.value.slice(cursorPos);
+  if (evt.target.classList.contains('keyboard__keys')) {
+    enterText()
+  }
   if (evt.target.classList.contains('keyboard__key--switch') || evt.target.parentNode.classList.contains('keyboard__key--switch')) {
     if (evt.target.classList.contains('keyboard__key--double') || evt.target.parentNode.classList.contains('keyboard__key--double')) {
       if (soundOn) {
@@ -400,6 +420,10 @@ keyboard.addEventListener('click', (evt) => {
     } else if (evt.target.classList.contains('keyboard__key--switch')) {
       btnPress = evt.target
     }
+
+    if (btnPress.classList.contains('keyboard__key--shift')) {
+      return
+    }
     if (soundOn) {
       let digit = btnPress.getAttribute('data-code')
       if (likeLetters.includes(digit)) {
@@ -413,7 +437,9 @@ keyboard.addEventListener('click', (evt) => {
       }
 
     }
-    keyboardOutput.value += btnPress.lastChild.textContent
+
+    left += btnPress.lastChild.textContent
+    cursorPos++
     enterText()
 
   } else if (evt.target.classList.contains('keyboard__key')) {
@@ -424,10 +450,10 @@ keyboard.addEventListener('click', (evt) => {
         evt.target.classList.toggle('keyboard__key--sound-on')
         evt.target.classList.toggle('keyboard__key--sound-off')
         break;
-        case "voice":
-          evt.target.classList.toggle('keyboard__key--voice-on')
-          evt.target.classList.toggle('keyboard__key--voice-off')
-          break;
+      case "voice":
+        evt.target.classList.toggle('keyboard__key--voice-on')
+        evt.target.classList.toggle('keyboard__key--voice-off')
+        break;
       case "shift":
         if (soundOn) {
           audio = document.querySelector("audio[data-code = 'Shift']")
@@ -443,7 +469,9 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        keyboardOutput.value = keyboardOutput.value.slice(0, keyboardOutput.value.length - 1)
+
+        left += left.slice(0, left.length - 1)
+        cursorPos++
         enterText()
         break;
       case "space":
@@ -452,7 +480,8 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        keyboardOutput.value += ' '
+        left += ' '
+        cursorPos++
         enterText()
         break;
       case "caps":
@@ -471,7 +500,8 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        keyboardOutput.value += '\n'
+        left += '\n'
+        cursorPos++
         enterText()
         break;
       case "tab":
@@ -480,7 +510,8 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        keyboardOutput.value += '    '
+        left += '    '
+        cursorPos += 4
         enterText()
         break;
       default:
@@ -494,7 +525,8 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        keyboardOutput.value += key
+        left += key
+        cursorPos++
         enterText()
         break;
     }

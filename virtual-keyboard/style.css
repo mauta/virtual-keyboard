@@ -1,12 +1,4 @@
 
-/* @font-face {
-  font-family: "Mandy's Sketch";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/18117.otf");
-    
-} */
-
 @font-face {
   font-family: "PenguinAttack";
   font-style: normal;
@@ -26,6 +18,12 @@ body {
 h1 {
   text-align: center;
  
+}
+
+.wrap{
+  background-color: #fff;
+  position: relative;
+  z-index: 2;
 }
 
 .keyboard-output {
@@ -75,6 +73,7 @@ h1 {
   top: .1em;
   left: .1em;
   box-shadow: 0 0 0 60px rgba(0, 0, 0, .05) inset;
+
 }
 
 .keyboard {
@@ -82,34 +81,44 @@ h1 {
   position: absolute;
   box-sizing: border-box;
   width: 1000px;
-  animation-name: my-animation;
-  animation-duration:3s;
   left: 50%;
+  top: 150px;
   transform: translateX(-50%);
   margin: 0 auto;
   padding: 5px;
-  -webkit-transition: transform 2s;
-  -moz-transition: transform 2s;
-  -ms-transition: transform 2s;
-  -o-transition: transform 2s;
-  -webkit-transform: translateX(-50%);
-  -moz-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  -o-transform: translateX(-50%);
 }
 
+
+
+.keyboard-on{
+  display: block;
+animation-name: my-animation;
+animation-duration:.5s;
+animation-fill-mode: forwards;
+animation-timing-function: linear;
+}
+
+.keyboard-off{
+  display: block;
+  animation-name: my-animation-off;
+  animation-duration:.5s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  }
+
+
 @keyframes my-animation {
-  0%   { opacity: 0.2; }
-  100% { opacity: 1; }
+  0%   { top: 150px; }
+  100% { top: 420px; }
+}
+
+@keyframes my-animation-off {
+  0%   { top: 420px; }
+  100% { top: 150px; }
 }
 
 .keyboard__hidden {
-  display: none;
-  transition: display 2s;
-  -webkit-transition: display 2s;
-  -moz-transition: display 2s;
-  -ms-transition: display 2s;
-  -o-transition: display 2s;
+  display: block;
 }
 
 .keyboard__keys {
