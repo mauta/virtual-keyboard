@@ -282,6 +282,7 @@ const drawKeyboard = (keys) => {
           break;
         case "voice":
           keyElement.textContent = elem
+          keyElement.classList.add("keyboard__key--voice")
           keyElement.classList.add("keyboard__key--voice-off")
           break;
         case "back":
@@ -316,7 +317,6 @@ const drawKeyboard = (keys) => {
   }
 
   btnBcsp = document.querySelector('.keyboard__key--backspace')
-  console.log(btnBcsp)
   btnBcsp.addEventListener('mousedown', () => {
     console.log('удалили')
     let mouserun = () => {
@@ -328,7 +328,7 @@ const drawKeyboard = (keys) => {
       document.removeEventListener('mouseup', mouserun)
     }
     clearAll = setTimeout(standart, 700)
-  
+
     document.addEventListener('mouseup', mouserun)
   })
 }
@@ -576,7 +576,7 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-       
+
 
         if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
           left += key
@@ -592,7 +592,7 @@ keyboard.addEventListener('click', (evt) => {
 
         break;
 
-        
+
     }
   }
 
@@ -742,3 +742,47 @@ const keyUnpress = (btn) => {
 keyboardOutput.addEventListener('keydown', keyPress)
 
 document.addEventListener('keyup', keyUnpress)
+
+
+
+const voiceRec = () => {
+  console.log('я тебя слушаю')
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  console.log(recognition)
+  recognition.interimResults = true;
+  recognition.lang = 'ru-RU';
+  recognition.interimResults = true
+   
+
+
+  recognition.start();
+  recognition.addEventListener('end', recognition.start) 
+  let transcript
+  const tryRec = (e) =>{
+    transcript = Array.from(e.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('');
+  
+    if (e.results[0].isFinal) {
+      keyboardOutput.value += transcript + ' '
+    }
+  }
+  const stopVoice = () =>{
+    recognition.stop()
+    cursorPos= keyboardOutput.value.length
+    keyboardOutput.selectionStart = cursorPos
+    keyboardOutput.selectionEnd = cursorPos
+    keyboardOutput.focus()
+    recognition.removeEventListener('end', recognition.start)
+    recognition.removeEventListener('result',tryRec)
+  
+  }
+  recognition.addEventListener('result',tryRec);
+  document.querySelector('.keyboard__key--voice').addEventListener('click', stopVoice)
+}
+
+document.querySelector('.keyboard__key--voice').addEventListener('click', voiceRec)
+
+
