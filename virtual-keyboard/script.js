@@ -358,6 +358,9 @@ const drawKeyboard = (keys) => {
       .join('');
     if (e.results[0].isFinal) {
       left += ' ' + transcript + ' '
+      if (cursorPos === 0) {
+        cursorPos=left.length
+      }
       enterText()
     }
   }
