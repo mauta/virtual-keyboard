@@ -9,6 +9,9 @@ let cursorPos = 0
 let left = ''
 let right = ''
 let isKeyboardOpen = false
+let isVoiceOn = false
+let clearAll
+let btnBcsp = document.querySelector('.keyboard__key--backspace')
 
 openBtn.addEventListener('click', function () {
   if (!isKeyboardOpen) {
@@ -210,16 +213,19 @@ const drawKeyboard = (keys) => {
         keyElement.addEventListener('click', () => {
           if (soundOn) {
             const audio = document.querySelector(`audio[data-key = 'lang']`)
+            audio.currentTime = 0
             audio.play()
           }
           if (elem.top === 'en') {
             language = "eng"
             delKeyboard()
             drawKeyboard(keysBtnAllEng)
+            keyboardOutput.focus()
           } else {
             language = "rus"
             delKeyboard()
             drawKeyboard(keysBtnAllRu)
+            keyboardOutput.focus()
           }
         })
       }
@@ -309,6 +315,22 @@ const drawKeyboard = (keys) => {
     Allkeys[i].setAttribute('data-code', keysCode[i])
   }
 
+  btnBcsp = document.querySelector('.keyboard__key--backspace')
+  console.log(btnBcsp)
+  btnBcsp.addEventListener('mousedown', () => {
+    console.log('удалили')
+    let mouserun = () => {
+      document.removeEventListener('mouseup', mouserun)
+      clearTimeout(clearAll)
+    }
+    let standart = () => {
+      clearOutput()
+      document.removeEventListener('mouseup', mouserun)
+    }
+    clearAll = setTimeout(standart, 700)
+  
+    document.addEventListener('mouseup', mouserun)
+  })
 }
 
 drawKeyboard(keysBtnAllEng)
@@ -316,7 +338,6 @@ drawKeyboard(keysBtnAllEng)
 
 const enterText = () => {
   keyboardOutput.value = left + right
-  keyboardOutput.textContent = keyboardOutput.value
   keyboardOutput.focus()
   keyboardOutput.selectionStart = cursorPos
   keyboardOutput.selectionEnd = cursorPos
@@ -393,6 +414,7 @@ keyboard.addEventListener('click', (evt) => {
   cursorPos = keyboardOutput.selectionStart;
   left = keyboardOutput.value.slice(0, cursorPos);
   right = keyboardOutput.value.slice(cursorPos);
+
   if (evt.target.classList.contains('keyboard__keys')) {
     enterText()
   }
@@ -493,6 +515,7 @@ keyboard.addEventListener('click', (evt) => {
         }
 
         enterText()
+
         break;
       case "space":
         if (soundOn) {
@@ -500,9 +523,17 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        left += ' '
-        cursorPos++
-        enterText()
+        if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
+          left += ' '
+          cursorPos++
+          enterText()
+        } else if (keyboardOutput.selectionStart !== keyboardOutput.selectionEnd) {
+          keyboardOutput.setRangeText(' ')
+          cursorPos++
+          keyboardOutput.selectionStart = cursorPos
+          keyboardOutput.selectionEnd = cursorPos
+          keyboardOutput.focus()
+        }
         break;
       case "caps":
         if (soundOn) {
@@ -545,12 +576,27 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        left += key
-        cursorPos++
-        enterText()
+       
+
+        if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
+          left += key
+          cursorPos++
+          enterText()
+        } else if (keyboardOutput.selectionStart !== keyboardOutput.selectionEnd) {
+          keyboardOutput.setRangeText(key)
+          cursorPos++
+          keyboardOutput.selectionStart = cursorPos
+          keyboardOutput.selectionEnd = cursorPos
+          keyboardOutput.focus()
+        }
+
         break;
+
+        
     }
   }
+
+
 })
 
 
@@ -562,24 +608,9 @@ const clearOutput = () => {
   keyboardOutput.textContent = ''
 }
 
-let clearAll
 
-let btnBcsp = document.querySelector('.keyboard__key--backspace')
 
-btnBcsp.addEventListener('mousedown',()=>{
-  let mouserun = () =>{
-    document.removeEventListener('mouseup',mouserun)
-    console.log('удалили')
-    clearTimeout(clearAll )
-  }
-  let standart = () =>{
-    clearOutput()
-     document.removeEventListener('mouseup',mouserun)
-  }
-  clearAll = setTimeout(standart,700)
-  
-  document.addEventListener('mouseup',mouserun)
-})
+
 
 
 const keyPress = (btn) => {
@@ -599,6 +630,7 @@ const keyPress = (btn) => {
         (language === 'rus') ? audio = document.querySelector("audio[data-code = 'letter']"): audio = document.querySelector("audio[data-code = 'english']")
         audio.currentTime = 0
         audio.play()
+
       }
 
 
@@ -647,7 +679,7 @@ const keyPress = (btn) => {
           audio.play()
         }
 
-        clearAll = setTimeout(clearOutput,700)   
+        clearAll = setTimeout(clearOutput, 700)
       }
 
       if (btn.code === 'Enter') {
@@ -675,11 +707,11 @@ const keyPress = (btn) => {
       }
     }
   })
+
 }
 
 const keyUnpress = (btn) => {
-  console.log('отпустила')
-  clearTimeout(clearAll )
+  clearTimeout(clearAll)
   const allKeys = keyboard.querySelectorAll('.keyboard__key')
   allKeys.forEach(elem => {
     if (elem.getAttribute('data-code') === btn.code) {
@@ -699,6 +731,10 @@ const keyUnpress = (btn) => {
         enterText()
       }
       btnPressOFF(elem)
+
+      cursorPos = keyboardOutput.selectionStart;
+      left = keyboardOutput.value.slice(0, cursorPos);
+      right = keyboardOutput.value.slice(cursorPos);
     }
   })
 }
