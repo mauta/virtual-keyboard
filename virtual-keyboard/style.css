@@ -133,7 +133,7 @@ animation-timing-function: linear;
 
 .keyboard__key {
   box-sizing: border-box;
-  width: 5%;
+  width: 6%;
   min-height: 7%;
   padding: 3px 0 4px 0;
   margin: 3px;
@@ -397,6 +397,16 @@ padding-left: 15px;
 
    .keyboard__key--lang .keyboard__key-down{
    
-    padding-left: 6px;
+    padding-left: 0px;
+  }
+
+  @keyframes my-animation {
+    0%   { top: 50px; }
+    100% { top: 250px; }
+  }
+  
+  @keyframes my-animation-off {
+    0%   { top: 250px; }
+    100% { top: 50px; }
   }
 }

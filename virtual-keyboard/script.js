@@ -359,7 +359,7 @@ const drawKeyboard = (keys) => {
     if (e.results[0].isFinal) {
       left += ' ' + transcript + ' '
       if (cursorPos === 0) {
-        cursorPos=left.length
+        cursorPos = left.length
       }
       enterText()
     }
@@ -534,8 +534,12 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        cursorPos--
-        enterText()
+        if (cursorPos > 0) {
+          cursorPos--
+        } else {
+          cursorPos = 0
+        }
+         enterText()
         break;
       case "sound":
         soundOn = !soundOn
