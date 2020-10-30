@@ -283,7 +283,11 @@ const drawKeyboard = (keys) => {
         case "voice":
           keyElement.textContent = elem
           keyElement.classList.add("keyboard__key--voice")
-          keyElement.classList.add("keyboard__key--voice-off")
+          if (isVoiceOn) {
+            keyElement.classList.add("keyboard__key--voice-on")
+          } else {
+            keyElement.classList.add("keyboard__key--voice-off")
+          }
           break;
         case "back":
           keyElement.textContent = elem
@@ -331,6 +335,52 @@ const drawKeyboard = (keys) => {
 
     document.addEventListener('mouseup', mouserun)
   })
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+
+
+  const stopVoice = () => {
+    isVoiceOn = !isVoiceOn
+    cursorPos = keyboardOutput.value.length
+    keyboardOutput.selectionStart = cursorPos
+    keyboardOutput.selectionEnd = cursorPos
+    keyboardOutput.focus()
+    recognition.abort()
+    recognition.removeEventListener('end', recognition.start)
+    recognition.removeEventListener('result', tryRec)
+  }
+
+  const tryRec = (e) => {
+    let transcript
+    transcript = Array.from(e.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('');
+    if (e.results[0].isFinal) {
+      left += ' ' + transcript + ' '
+      enterText()
+    }
+  }
+  document.querySelector('.keyboard__key--voice').addEventListener('click', () => {
+    if (!isVoiceOn) {
+      isVoiceOn = !isVoiceOn
+      recognition.interimResults = true;
+      if (language === 'eng') {
+        recognition.lang = 'en-US'
+      } else if (language === 'rus') {
+
+        recognition.lang = 'ru'
+      }
+      recognition.interimResults = true
+      recognition.start();
+      recognition.addEventListener('end', recognition.start)
+      recognition.addEventListener('result', tryRec);
+
+    } else {
+      stopVoice()
+    }
+  })
+
 }
 
 drawKeyboard(keysBtnAllEng)
@@ -724,8 +774,6 @@ const keyUnpress = (btn) => {
           audio.currentTime = 0
           audio.play()
         }
-        console.log(left)
-        console.log(cursorPos)
         left += '    '
         cursorPos += 4
         enterText()
@@ -742,47 +790,3 @@ const keyUnpress = (btn) => {
 keyboardOutput.addEventListener('keydown', keyPress)
 
 document.addEventListener('keyup', keyUnpress)
-
-
-
-const voiceRec = () => {
-  console.log('я тебя слушаю')
-  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
-  console.log(recognition)
-  recognition.interimResults = true;
-  recognition.lang = 'ru-RU';
-  recognition.interimResults = true
-   
-
-
-  recognition.start();
-  recognition.addEventListener('end', recognition.start) 
-  let transcript
-  const tryRec = (e) =>{
-    transcript = Array.from(e.results)
-      .map(result => result[0])
-      .map(result => result.transcript)
-      .join('');
-  
-    if (e.results[0].isFinal) {
-      keyboardOutput.value += transcript + ' '
-    }
-  }
-  const stopVoice = () =>{
-    recognition.stop()
-    cursorPos= keyboardOutput.value.length
-    keyboardOutput.selectionStart = cursorPos
-    keyboardOutput.selectionEnd = cursorPos
-    keyboardOutput.focus()
-    recognition.removeEventListener('end', recognition.start)
-    recognition.removeEventListener('result',tryRec)
-  
-  }
-  recognition.addEventListener('result',tryRec);
-  document.querySelector('.keyboard__key--voice').addEventListener('click', stopVoice)
-}
-
-document.querySelector('.keyboard__key--voice').addEventListener('click', voiceRec)
-
-

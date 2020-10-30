@@ -87,6 +87,7 @@ h1 {
   transform: translateX(-50%);
   margin: 0 auto;
   padding: 5px;
+  box-sizing: border-box;
 }
 
 
@@ -128,7 +129,6 @@ animation-timing-function: linear;
   top: 0;
   left: 0;
   right: 0;
-  
 }
 
 .keyboard__key {
@@ -275,7 +275,7 @@ padding-left: 15px;
   background-position: center;
 }
 
-@media (max-width: 800px){
+@media (max-width: 1000px){
   body{
     font-size: 9px;
   }
@@ -286,34 +286,31 @@ padding-left: 15px;
   }
 
   .keyboard{
-    width: 90%;
-    left: 5%;
+    width: 100%;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+  
   }
 
   .keyboard__key{
-    width: 7.6%;
+    min-width: 35px;
     min-height: 20px;
-    font-size: 16px;
-    min-height: 5%;
-    margin: 2px;
+    font-size: 16px;  
+    margin: 1px;
   }
 
-  .keyboard__key--space {
-    width: 48%;
-  }
+ 
 
   .open-btn{
     width: 120px;
     height: 30px;
-    padding-top: 6px;
+    padding-top: 2px;
     margin: 0 auto;   
     font-size: 20px;
   }
 
-  .material-icons{
-    font-size: 12px;
-  }
-
+ 
   .keyboard__key--activable::after{
     top:3px;
     right:3px;
@@ -321,7 +318,85 @@ padding-left: 15px;
     height: 5px;
   }
 
-  .keyboard__hidden{
-    display: none;
+  .keyboard__key--sound-on{
+    background-size:50%;
+  }
+  
+  .keyboard__key--sound-off{
+    background-size:50%;
+  }
+  
+  .keyboard__key--voice-on{
+    background-size:50%;
+  }
+  
+  .keyboard__key--voice-off{
+    background-size:50%;
+  }
+
+  @keyframes my-animation {
+    0%   { top: 50px; }
+    100% { top: 300px; }
+  }
+  
+  @keyframes my-animation-off {
+    0%   { top: 300px; }
+    100% { top: 50px; }
+  }
+
+  .keyboard__key-top{    
+   left: 1px;
+   top: 1px;
+    font-size: 14px;
+  }
+  .keyboard__key-down{
+    padding-left: 12px;
+    }
+    
+
+  .keyboard__key--lang .keyboard__key-top{
+    left: 1px;
+    top: 0px;
+    font-size: 10px;
+  }
+  
+  .keyboard__key--lang .keyboard__key-down{
+   
+    padding-left: 10px;
+  }
+}
+
+@media (max-width: 700px){
+  body{
+    font-size: 7px;
+  }
+
+  .keyboard__key{
+    min-width: 15px;
+    min-height: 15px;
+    font-size: 14px;  
+    margin: 1px;
+  }
+
+  .keyboard__key-top{    
+    left: 1px;
+    top: 1px;
+     font-size: 10px;
+   }
+
+   .keyboard__key-down{
+    padding-left: 10px;
+    }
+    
+
+   .keyboard__key--lang .keyboard__key-top{
+    left: 0px;
+    top: 0px;
+    font-size: 8px;
+  }
+
+   .keyboard__key--lang .keyboard__key-down{
+   
+    padding-left: 6px;
   }
 }
