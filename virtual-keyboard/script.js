@@ -266,7 +266,6 @@ const drawKeyboard = (keys) => {
         case "enter":
           keyElement.classList.add("keyboard__key--double")
           keyElement.textContent = elem
-          // отрисовка кнопки
           break;
         case "tab":
           keyElement.classList.add("keyboard__key--double")
@@ -304,10 +303,7 @@ const drawKeyboard = (keys) => {
       }
     }
 
-
-
     keyboardKeys.appendChild(keyElement)
-
 
     if (insertLineBreak) {
       keyboardKeys.appendChild(document.createElement("br"))
@@ -319,10 +315,8 @@ const drawKeyboard = (keys) => {
   for (let i = 0; i < Allkeys.length; i++) {
     Allkeys[i].setAttribute('data-code', keysCode[i])
   }
-
   btnBcsp = document.querySelector('.keyboard__key--backspace')
   btnBcsp.addEventListener('mousedown', () => {
-    console.log('удалили')
     let mouserun = () => {
       document.removeEventListener('mouseup', mouserun)
       clearTimeout(clearAll)
@@ -332,12 +326,10 @@ const drawKeyboard = (keys) => {
       document.removeEventListener('mouseup', mouserun)
     }
     clearAll = setTimeout(standart, 700)
-
     document.addEventListener('mouseup', mouserun)
   })
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
-
 
   const stopVoice = () => {
     isVoiceOn = !isVoiceOn
@@ -364,6 +356,7 @@ const drawKeyboard = (keys) => {
       enterText()
     }
   }
+
   document.querySelector('.keyboard__key--voice').addEventListener('click', () => {
     if (!isVoiceOn) {
       isVoiceOn = !isVoiceOn
@@ -388,14 +381,12 @@ const drawKeyboard = (keys) => {
 
 drawKeyboard(keysBtnAllEng)
 
-
 const enterText = () => {
   keyboardOutput.value = left + right
   keyboardOutput.focus()
   keyboardOutput.selectionStart = cursorPos
   keyboardOutput.selectionEnd = cursorPos
 }
-
 
 const toggleCapsLock = () => {
   capslock = !capslock
@@ -420,8 +411,6 @@ const toggleShift = () => {
   }
 }
 
-
-
 const btnPressON = (btn) => {
   btn.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
   btn.style.top = '.1em'
@@ -434,16 +423,12 @@ const btnPressOFF = (btn) => {
   btn.style.left = ''
 }
 
-
-
 const delKeyboard = () => {
   const keyboardForDel = document.querySelectorAll('.keyboard__key')
   const brForDel = document.querySelectorAll('br')
   brForDel.forEach(el => el.remove())
   keyboardForDel.forEach(el => el.remove())
 }
-
-
 
 const shiftKeyPress = () => {
   let switchKeys = keyboard.querySelectorAll('.keyboard__key--switch')
@@ -460,8 +445,6 @@ const shiftKeyPress = () => {
   toggleCapsLock()
   enterText()
 }
-
-
 
 keyboard.addEventListener('click', (evt) => {
   cursorPos = keyboardOutput.selectionStart;
@@ -484,9 +467,7 @@ keyboard.addEventListener('click', (evt) => {
     if (evt.target.classList.contains('keyboard__key--lang') || evt.target.parentNode.classList.contains('keyboard__key--lang')) {
       return
     }
-
     let btnPress
-
 
     if (evt.target.classList.contains('keyboard__key-top') || evt.target.classList.contains('keyboard__key-down')) {
       btnPress = evt.target.parentNode
@@ -508,13 +489,18 @@ keyboard.addEventListener('click', (evt) => {
         audio.currentTime = 0
         audio.play()
       }
-
     }
-
-    left += btnPress.lastChild.textContent
-    cursorPos++
-    enterText()
-
+    if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
+      left += btnPress.lastChild.textContent
+      cursorPos++
+      enterText()
+    } else if (keyboardOutput.selectionStart !== keyboardOutput.selectionEnd) {
+      keyboardOutput.setRangeText(btnPress.lastChild.textContent)
+      cursorPos++
+      keyboardOutput.selectionStart = cursorPos
+      keyboardOutput.selectionEnd = cursorPos
+      keyboardOutput.focus()
+    }
   } else if (evt.target.classList.contains('keyboard__key')) {
     let key = evt.target.textContent
 
@@ -539,7 +525,7 @@ keyboard.addEventListener('click', (evt) => {
         } else {
           cursorPos = 0
         }
-         enterText()
+        enterText()
         break;
       case "sound":
         soundOn = !soundOn
@@ -565,13 +551,19 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-
-        left = left.slice(0, left.length - 1)
-        if (right !== '') {
-          cursorPos--
+        if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
+          left = left.slice(0, left.length - 1)
+          if (right !== '') {
+            cursorPos--
+          }
+          enterText()
+        } else if (keyboardOutput.selectionStart !== keyboardOutput.selectionEnd) {
+          keyboardOutput.setRangeText('')
+          keyboardOutput.selectionStart = cursorPos
+          keyboardOutput.selectionEnd = cursorPos
+          keyboardOutput.focus()
         }
 
-        enterText()
 
         break;
       case "space":
@@ -608,9 +600,17 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        left += '\n'
-        cursorPos++
-        enterText()
+        if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
+          left += '\n'
+          cursorPos++
+          enterText()
+        } else if (keyboardOutput.selectionStart !== keyboardOutput.selectionEnd) {
+          keyboardOutput.setRangeText('\n')
+          cursorPos++
+          keyboardOutput.selectionStart = cursorPos
+          keyboardOutput.selectionEnd = cursorPos
+          keyboardOutput.focus()
+        }
         break;
       case "tab":
         if (soundOn) {
@@ -618,9 +618,17 @@ keyboard.addEventListener('click', (evt) => {
           audio.currentTime = 0
           audio.play()
         }
-        left += '    '
-        cursorPos += 4
-        enterText()
+        if (keyboardOutput.selectionStart === keyboardOutput.selectionEnd) {
+          left += '    '
+          cursorPos += 4
+          enterText()
+        } else if (keyboardOutput.selectionStart !== keyboardOutput.selectionEnd) {
+          keyboardOutput.setRangeText('    ')
+          cursorPos += 4
+          keyboardOutput.selectionStart = cursorPos
+          keyboardOutput.selectionEnd = cursorPos
+          keyboardOutput.focus()
+        }
         break;
       default:
         if (soundOn) {
@@ -646,14 +654,9 @@ keyboard.addEventListener('click', (evt) => {
           keyboardOutput.selectionEnd = cursorPos
           keyboardOutput.focus()
         }
-
         break;
-
-
     }
   }
-
-
 })
 
 
@@ -664,11 +667,6 @@ const clearOutput = () => {
   keyboardOutput.value = ''
   keyboardOutput.textContent = ''
 }
-
-
-
-
-
 
 const keyPress = (btn) => {
   const allKeys = keyboard.querySelectorAll('.keyboard__key')
@@ -683,13 +681,10 @@ const keyPress = (btn) => {
       }
 
       if (digit.slice(0, 3) === 'Key' || likeLetters.includes(digit)) {
-
         (language === 'rus') ? audio = document.querySelector("audio[data-code = 'letter']"): audio = document.querySelector("audio[data-code = 'english']")
         audio.currentTime = 0
         audio.play()
-
       }
-
 
       if (btn.code === 'CapsLock') {
         if (soundOn) {
@@ -702,7 +697,6 @@ const keyPress = (btn) => {
       }
 
       if (btn.code === 'ShiftRight' || btn.code === 'ShiftLeft') {
-
         if (btn.altKey || btn.ctrlKey) {
           if (soundOn) {
             audio = document.querySelector(`audio[data-key = 'lang']`)
@@ -723,10 +717,9 @@ const keyPress = (btn) => {
             audio.currentTime = 0
             audio.play()
           }
-          shiftKeyPress()
-          toggleShift()
         }
-
+        shiftKeyPress()
+        toggleShift()
       }
 
       if (btn.code === 'Backspace') {
@@ -735,7 +728,6 @@ const keyPress = (btn) => {
           audio.currentTime = 0
           audio.play()
         }
-
         clearAll = setTimeout(clearOutput, 700)
       }
 
@@ -786,7 +778,6 @@ const keyUnpress = (btn) => {
         enterText()
       }
       btnPressOFF(elem)
-
       cursorPos = keyboardOutput.selectionStart;
       left = keyboardOutput.value.slice(0, cursorPos);
       right = keyboardOutput.value.slice(cursorPos);
