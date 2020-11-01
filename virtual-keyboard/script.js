@@ -1,5 +1,6 @@
 const openBtn = document.querySelector('.open-btn')
 const keyboardOutput = document.querySelector('.keyboard-output')
+let isBigLetter = false
 let capslock = false
 let shiftOn = false
 let soundOn = true
@@ -185,6 +186,83 @@ const keysCode = ["Backquote", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5",
 
 const likeLetters = ["Backquote", "Minus", "Equal", "BracketLeft", "BracketRight", "Backslash", "Semicolon", "Quote", "Comma", "Period", "Slash"]
 
+const enterText = () => {
+  keyboardOutput.value = left + right
+  keyboardOutput.focus()
+  keyboardOutput.selectionStart = cursorPos
+  keyboardOutput.selectionEnd = cursorPos
+}
+
+const toggleCapsLock = () => {
+   for (const key of document.querySelectorAll('.keyboard__key')) {
+    if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
+      key.textContent = isBigLetter ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
+    }
+  }
+}
+
+const btnPressON = (btn) => {
+  btn.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
+  btn.style.top = '.1em'
+  btn.style.left = '.1em'
+}
+
+const btnPressOFF = (btn) => {
+  btn.style.boxShadow = ''
+  btn.style.top = ''
+  btn.style.left = ''
+}
+
+const toggleShift = () => {  
+  let shiftKeys = keyboard.querySelectorAll('.keyboard__key--shift')
+  if (shiftOn) {
+    shiftKeys.forEach(elem => {
+           btnPressON(elem)
+    })
+  } else {
+    shiftKeys.forEach(elem => {
+         btnPressOFF(elem)
+    })
+  }
+
+  for (const key of document.querySelectorAll('.keyboard__key')) {
+    if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
+      key.textContent = isBigLetter ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
+    }
+  }
+}
+
+
+
+const delKeyboard = () => {
+  const keyboardForDel = document.querySelectorAll('.keyboard__key')
+  const brForDel = document.querySelectorAll('br')
+  brForDel.forEach(el => el.remove())
+  keyboardForDel.forEach(el => el.remove())
+}
+
+const shiftKeyPress = () => {
+  let switchKeys = keyboard.querySelectorAll('.keyboard__key--switch')
+  switchKeys.forEach(elem => {
+    if (elem.lastChild.textContent === 'shift' || elem.lastChild.textContent === 'en' || elem.lastChild.textContent === 'ru') {
+      return
+    } else {
+      const top = elem.firstChild.textContent
+      const down = elem.lastChild.textContent
+      elem.firstChild.textContent = down
+      elem.lastChild.textContent = top
+    }
+  })
+
+  for (const key of document.querySelectorAll('.keyboard__key')) {
+    if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
+      key.textContent = isBigLetter ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
+    }
+  }
+  enterText()
+}
+
+
 const drawKeyboard = (keys) => {
   keys.forEach(elem => {
     const keyElement = document.createElement("button")
@@ -205,7 +283,12 @@ const drawKeyboard = (keys) => {
       if (elem.down === 'shift') {
         keyElement.classList.add("keyboard__key--double")
         keyElement.classList.add("keyboard__key--shift")
-
+        if(shiftOn){
+          keyElement.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
+          keyElement.style.top = '.1em'
+          keyElement.style.left = '.1em'
+                 
+        } 
       }
       if (elem.down === 'en' || elem.down === 'ru') {
         keyElement.classList.add('keyboard__key--lang')
@@ -241,7 +324,14 @@ const drawKeyboard = (keys) => {
         case "shift":
           keyElement.classList.add("keyboard__key--double")
           keyElement.classList.add("keyboard__key--shift")
+
           keyElement.textContent = elem
+          if(shiftOn){
+            keyElement.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
+            keyElement.style.top = '.1em'
+            keyElement.style.left = '.1em'
+            shiftKeyPress()          
+          } 
           break;
 
         case "backspace":
@@ -297,7 +387,7 @@ const drawKeyboard = (keys) => {
           keyElement.classList.add("keyboard__key--next")
           break;
         default:
-          capslock ? keyElement.textContent = elem.toUpperCase() : keyElement.textContent = elem.toLowerCase()
+          isBigLetter ? keyElement.textContent = elem.toUpperCase() : keyElement.textContent = elem.toLowerCase()
           keyElement.classList.add('keyboard__key--letter')
           break;
       }
@@ -381,70 +471,6 @@ const drawKeyboard = (keys) => {
 
 drawKeyboard(keysBtnAllEng)
 
-const enterText = () => {
-  keyboardOutput.value = left + right
-  keyboardOutput.focus()
-  keyboardOutput.selectionStart = cursorPos
-  keyboardOutput.selectionEnd = cursorPos
-}
-
-const toggleCapsLock = () => {
-  capslock = !capslock
-  for (const key of document.querySelectorAll('.keyboard__key')) {
-    if (key.childElementCount === 0 && key.classList.contains('keyboard__key--letter')) {
-      key.textContent = capslock ? key.textContent.toUpperCase() : key.textContent.toLowerCase()
-    }
-  }
-}
-
-const toggleShift = () => {
-  shiftOn = !shiftOn
-  let shiftKeys = keyboard.querySelectorAll('.keyboard__key--shift')
-  if (shiftOn) {
-    shiftKeys.forEach(elem => {
-      btnPressON(elem)
-    })
-  } else {
-    shiftKeys.forEach(elem => {
-      btnPressOFF(elem)
-    })
-  }
-}
-
-const btnPressON = (btn) => {
-  btn.style.boxShadow = '0 0 0 60px rgba(0, 0, 0, .05) inset'
-  btn.style.top = '.1em'
-  btn.style.left = '.1em'
-}
-
-const btnPressOFF = (btn) => {
-  btn.style.boxShadow = ''
-  btn.style.top = ''
-  btn.style.left = ''
-}
-
-const delKeyboard = () => {
-  const keyboardForDel = document.querySelectorAll('.keyboard__key')
-  const brForDel = document.querySelectorAll('br')
-  brForDel.forEach(el => el.remove())
-  keyboardForDel.forEach(el => el.remove())
-}
-
-const shiftKeyPress = () => {
-  let switchKeys = keyboard.querySelectorAll('.keyboard__key--switch')
-  switchKeys.forEach(elem => {
-    if (elem.lastChild.textContent === 'shift' || elem.lastChild.textContent === 'en' || elem.lastChild.textContent === 'ru') {
-      return
-    } else {
-      const top = elem.firstChild.textContent
-      const down = elem.lastChild.textContent
-      elem.firstChild.textContent = down
-      elem.lastChild.textContent = top
-    }
-  })
-  toggleCapsLock()
-  enterText()
-}
 
 keyboard.addEventListener('click', (evt) => {
   cursorPos = keyboardOutput.selectionStart;
@@ -462,6 +488,7 @@ keyboard.addEventListener('click', (evt) => {
         audio.play()
       }
       shiftKeyPress()
+      shiftOn = !shiftOn
       toggleShift()
     }
     if (evt.target.classList.contains('keyboard__key--lang') || evt.target.parentNode.classList.contains('keyboard__key--lang')) {
@@ -543,6 +570,8 @@ keyboard.addEventListener('click', (evt) => {
           audio.play()
         }
         shiftKeyPress()
+        shiftOn = !shiftOn
+        isBigLetter = !isBigLetter
         toggleShift()
         break;
       case "backspace":
@@ -591,6 +620,8 @@ keyboard.addEventListener('click', (evt) => {
           audio.play()
         }
         evt.target.classList.toggle('keyboard__key--active')
+        capslock=!capslock
+        isBigLetter = !isBigLetter
         toggleCapsLock()
         enterText()
         break;
@@ -693,6 +724,7 @@ const keyPress = (btn) => {
           audio.play()
         }
         keyboard.querySelector('.keyboard__key--caps').classList.toggle('keyboard__key--active')
+        capslock=!capslock
         toggleCapsLock()
       }
 
@@ -718,7 +750,9 @@ const keyPress = (btn) => {
             audio.play()
           }
         }
+        isBigLetter =!isBigLetter
         shiftKeyPress()
+        shiftOn = !shiftOn
         toggleShift()
       }
 
