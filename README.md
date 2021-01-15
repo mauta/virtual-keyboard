@@ -1,6 +1,6 @@
 ## Task 5. Virtual keyboard для [RS School](https://rs.school/)
 
-![](https://yadi.sk/i/xi6Wf9zSG_XLoQ)
+![](2021-01-15_20-47-33.png)
 
 [Готовый Virtual keyboard](https://mauta.github.io/virtual-keyboard/virtual-keyboard/) 
 
